@@ -20,6 +20,10 @@ var Traffic = {
 
 }
 
-function showTraffic() {
+function _showTraffic() {
 	Traffic.update();
+}
+
+function showTraffic() {
+	getConfig(_showTraffic);
 }

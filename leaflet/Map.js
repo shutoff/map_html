@@ -1,6 +1,7 @@
 var scripts = {};
 
 function loadScript(name, cb) {
+    console.log('load', name, scripts[name])
     if (scripts[name] != null) {
         if (scripts[name] && cb)
             cb();
@@ -72,22 +73,22 @@ function loadMapLayer() {
         map.removeLayer(mapLayer);
         mapLayer = null;
     }
-    if (Config.type == 'osm') {
+    if (Config.type == 'OSM') {
         mapLayer = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
             maxZoom: 18
         });
         map.addLayer(mapLayer);
     }
-    if (Config.type == 'yandex') {
+    if (Config.type == 'Yandex') {
         loadScript('http://api-maps.yandex.ru/2.0/?load=package.map&lang=' + Config.language, function() {
             mapLayer = new L.Yandex();
             map.addLayer(mapLayer);
         });
     }
-    if (Config.type == 'google') {
+    if (Config.type == 'Google') {
         loadScript('https://maps.googleapis.com/maps/api/js?v=3.9&callback=loaded&language=' + Config.language);
     }
-    if (Config.type == 'bing') {
+    if (Config.type == 'Bing') {
         mapLayer = new L.BingLayer("Avl_WlFuKVJbmBFOcG3s4A2xUY1DM2LFYbvKTcNfvIhJF7LqbVW-VsIE4IJQB0Nc", {
             type: 'Road',
             culture: Config.language
@@ -101,6 +102,8 @@ function updateType() {
 }
 
 function initialize() {
+    console.log('initialzie')
+
     var bounds = getRect(getBounds());
 
     var p1 = bounds[0];
@@ -131,15 +134,19 @@ function initialize() {
     map.setZoom(zoom);
     loadMapLayer();
 
-    showTraffic();
+    _showTraffic();
     if (Config.track == null)
-        myLocation();
+        Location.update();
 
+    notify("init");
 }
 
 function init() {
+    console.log('init');
     getConfig(function() {
+        console.log(Config);
         if (Config.zone != null) {
+            console.log('zone')
             loadScript('../leaflet/Zone.js', function() {
                 getBounds = zoneGetBounds;
                 initialize();
@@ -148,18 +155,20 @@ function init() {
             });
         }
         if (Config.track != null) {
+            console.log('tracks')
             loadScript('../leaflet/Tracks.js', function() {
                 getBounds = tracksGetBounds;
                 initialize();
-                showTracks();
+                Tracks.update();
                 return;
             })
         }
         if (Config.points != null) {
+            console.log('point');
             loadScript('../leaflet/Points.js', function() {
                 getBounds = pointsGetBounds;
                 initialize();
-                showPoints();
+                Points.update();
                 center();
                 return;
             })
@@ -169,7 +178,7 @@ function init() {
 
 function notify(method, data) {
     if (window.android != null) {
-        windows.android[method](data);
+        android[method](data);
         return;
     }
     console.log(method, data);

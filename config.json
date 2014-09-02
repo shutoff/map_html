@@ -1,7 +1,7 @@
 {
 	"location": "60.011,30.009,500",
 	"traffic": true,
-	"type": "google",
+	"type": "Google",
 	"kmh": "km/h",
 	"speed": true,
 	"language": "ru",

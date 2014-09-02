@@ -17,7 +17,7 @@ android = {
 //	},
 
 	getType: function() {
-		return 'yandex';
+		return 'Yandex';
 	},
 
 	traffic: function() {
@@ -34,7 +34,10 @@ android = {
 
 	language: function() {
 		return 'ru'
-	}
+	},
 
+	init: function(data) {
+		console.log('init', data)
+	}
 
 }
