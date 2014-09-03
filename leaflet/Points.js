@@ -183,7 +183,7 @@ function pointsGetBounds() {
 }
 
 function showPoints() {
-	getConfig(function() {
+	getPoints(function() {
 		Points.update();
 	})
 }

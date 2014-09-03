@@ -1,5 +1,5 @@
 function showTracks() {
-	getConfig(function() {
+	getTrack(function() {
 		Tracks.update();
 	});
 }
@@ -8,17 +8,17 @@ function saveTrack() {
 	var bounds = map.getBounds();
 	var ne = bounds.getNorthEast();
 	var sw = bounds.getSouthWest();
-	notify('save', sw.lat, ne.lat, sw.lng, ne.lng);
+	notify('save', sw.lat + ',' + ne.lat + ',' + sw.lng + ',' + ne.lng);
 }
 
 function shareTrack() {
 	var bounds = map.getBounds();
 	var ne = bounds.getNorthEast();
 	var sw = bounds.getSouthWest();
-	notify('share', sw.lat, ne.lat, sw.lng, ne.lng);
+	notify('share', sw.lat + ',' + ne.lat + ',' +  sw.lng + ',' + ne.lng);
 }
 
-function tracksGetBounds() {
+function trackGetBounds() {
 	if (!Tracks.points)
 		Tracks.init();
 	return [

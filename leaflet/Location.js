@@ -3,7 +3,16 @@ var Location = {
 	update: function() {
 		if (map == null)
 			return;
-		var location = Config.location.split(',');
+		if (this.data == null) {
+			if (this.location) {
+				map.removeLayer(this.location);
+				map.removeLayer(this.marker);
+				this.location = null;
+				this.marker = null;
+			}
+			return;
+		}
+		var location = this.data.split(',');
 		if (location.length < 3)
 			return;
 		var lat = location[0];
@@ -42,7 +51,8 @@ var Location = {
 }
 
 function myLocation() {
-	getConfig(function() {
+	getLocation(function(res) {
+		Location.data = res;
 		Location.update();
 	})
 }
@@ -51,9 +61,9 @@ function setPosition() {
 	if (map == null)
 		return;
 
-	getConfig(function() {
+	getLocation(function(res) {
 
-		var pos = Config.location.split(',');
+		var pos = res.split(',');
 		if (pos.length < 3)
 			return;
 

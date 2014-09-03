@@ -1,7 +1,6 @@
 var scripts = {};
 
 function loadScript(name, cb) {
-    console.log('load', name, scripts[name])
     if (scripts[name] != null) {
         if (scripts[name] && cb)
             cb();
@@ -23,18 +22,21 @@ function loadScript(name, cb) {
     document.body.appendChild(script);
 }
 
-function getConfig(cb) {
+function getFile(name, cb) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
+            cb(xmlhttp.responseText);
+        }
+    }
+    xmlhttp.open("GET", "../../" + name, true);
+    xmlhttp.send();
+}
 
-    if (window.android != null){
+function getConfig(cb) {
+    console.log('getConfig' + getConfig.caller);
+    if (window.android != null) {
         Config = {};
-        if (android.getLocation != null)
-            Config.location = android.getLocation() + '';
-        if (android.getData != null)
-            Config.points = android.getData() + '';
-        if (android.getTracks != null)
-            Config.track = android.getTracks() + '';
-        if (android.getZone != null)
-            Config.zone = android.getZone() + '';
         if (android.getType != null)
             Config.type = android.getType() + '';
         if (android.traffic != null)
@@ -45,20 +47,54 @@ function getConfig(cb) {
             Config.speed = android.speed() + '';
         if (android.language != null)
             Config.language = android.language() + '';
+        if (android.getZone != null)
+            Config.action = 'zone';
+        if (android.getTracks != null)
+            Config.action = 'track';
+        if (android.getData != null)
+            Config.action = 'point';
         cb();
         return;
     }
+    getFile('config.json', function(res) {
+        Config = JSON.parse(res);
+    })
+}
 
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
-            var res = xmlhttp.responseText;
-            Config = JSON.parse(res);
-            cb();
-        }
+function getZone(cb) {
+    if (window.android != null) {
+        cb(android.getZone() + "")
+        return;
+
     }
-    xmlhttp.open("GET", "../../config.json", true);
-    xmlhttp.send();
+    getFile('zone', cb);
+}
+
+function getTrack(cb) {
+    if (window.android != null) {
+        cb(android.getTracks() + "")
+        return;
+
+    }
+    getFile('track', cb);
+}
+
+function getPoints(cb) {
+    if (window.android != null) {
+        cb(android.getPoints() + "")
+        return;
+
+    }
+    getFile('points', cb);
+}
+
+function getLocation(cb) {
+    if (window.android != null) {
+        cb(android.getLocation() + "")
+        return;
+
+    }
+    getFile('location', cb);
 }
 
 var mapLayer;
@@ -86,7 +122,12 @@ function loadMapLayer() {
         });
     }
     if (Config.type == 'Google') {
-        loadScript('https://maps.googleapis.com/maps/api/js?v=3.9&callback=loaded&language=' + Config.language);
+        var url = 'https://maps.googleapis.com/maps/api/js?v=3.9&callback=loaded&language=' + Config.language;
+        if (scripts[url] == 1) {
+            window.loaded();
+            return;
+        }
+        loadScript(url);
     }
     if (Config.type == 'Bing') {
         mapLayer = new L.BingLayer("Avl_WlFuKVJbmBFOcG3s4A2xUY1DM2LFYbvKTcNfvIhJF7LqbVW-VsIE4IJQB0Nc", {
@@ -102,8 +143,6 @@ function updateType() {
 }
 
 function initialize() {
-    console.log('initialzie')
-
     var bounds = getRect(getBounds());
 
     var p1 = bounds[0];
@@ -136,42 +175,32 @@ function initialize() {
 
     _showTraffic();
     if (Config.track == null)
-        Location.update();
+        myLocation();
 
     notify("init");
 }
 
 function init() {
-    console.log('init');
     getConfig(function() {
-        console.log(Config);
-        if (Config.zone != null) {
-            console.log('zone')
-            loadScript('../leaflet/Zone.js', function() {
-                getBounds = zoneGetBounds;
-                initialize();
-                showZone();
-                return;
-            });
+        console.log(Config.action)
+        if (Config.action == 'zone') {
+            getBounds = zoneGetBounds;
+            initialize();
+            showZone();
+            return;
         }
-        if (Config.track != null) {
-            console.log('tracks')
-            loadScript('../leaflet/Tracks.js', function() {
-                getBounds = tracksGetBounds;
-                initialize();
-                Tracks.update();
-                return;
-            })
+        if (Config.action == 'track') {
+            getBounds = trackGetBounds;
+            initialize();
+            showTracks();
+            return;
         }
-        if (Config.points != null) {
-            console.log('point');
-            loadScript('../leaflet/Points.js', function() {
-                getBounds = pointsGetBounds;
-                initialize();
-                Points.update();
-                center();
-                return;
-            })
+        if (Config.action == 'points') {
+            getBounds = pointsGetBounds;
+            initialize();
+            showPoints();
+            center();
+            return;
         }
     })
 }
