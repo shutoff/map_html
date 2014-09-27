@@ -4,8 +4,8 @@
     <title></title>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="../leaflet/leaflet.css"/>
-    <script src="../leaflet/leaflet-src.js"></script>
+    <link rel="stylesheet" href="../leaflet.css"/>
+    <script src="../leaflet-src.js"></script>
     <script src="../leaflet/Marker.Rotate.js"></script>
     <script src="../leaflet/Leaflet.draw.js"></script>
     <script src="../leaflet/Edit.SimpleShape.js"></script>
@@ -21,6 +21,27 @@
     <script src="../leaflet/Yandex.js"></script>
     <script src="../android.js"></script>
 
+    <script type="text/javascript">
+
+    function selectType(e){
+        var sel = e.target;
+        var type = sel.options[sel.selectedIndex].value;
+        android.getType = function(){
+            return type;
+        }
+        updateType();
+    }
+
+    function setTraffic(e){
+        var traffic = e.target.checked;
+        android.traffic = function(){
+            return traffic;
+        }
+        showTraffic();
+    }
+
+    </script>
+
     <style>
         html, body, #map-canvas {
         margin: 0;
@@ -30,6 +51,16 @@
     </style>
 </head>
 <body onload="init()">
+<input type="submit" value="center" onClick="center()">
+<input type="submit" value="position" onClick="setPosition()">
+<select onchange="selectType(event)">
+    <option>Google</option>
+    <option>Yandex</option>
+    <option>Bing</option>
+    <option>OSM</option>
+</select>
+<input type="checkbox" onclick="setTraffic(event)">Traffic
+<br>
 <div id="map" style="height: 100%"></div>
 </body>
 </html>

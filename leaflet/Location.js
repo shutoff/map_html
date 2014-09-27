@@ -20,7 +20,7 @@ var Location = {
 		var radius = parseFloat(location[2]);
 		if (this.icon == null) {
 			this.icon = L.icon({
-				iconUrl: '../img/person.png',
+				iconUrl: '../images/person.png',
 				iconSize: [48, 48],
 				iconAnchor: [24, 48]
 			});
@@ -51,27 +51,22 @@ var Location = {
 }
 
 function myLocation() {
-	getLocation(function(res) {
-		Location.data = res;
-		Location.update();
-	})
+	Location.data = android.getLocation() + "";
+	Location.update();
 }
 
 function setPosition() {
 	if (map == null)
 		return;
 
-	getLocation(function(res) {
+	var pos = (android.getLocation() + '').split(',');
+	if (pos.length < 3)
+		return;
 
-		var pos = res.split(',');
-		if (pos.length < 3)
-			return;
+	var bounds = getBounds();
+	bounds.push([parseFloat(pos[0]), parseFloat(pos[1])]);
 
-		var bounds = getBounds();
-		bounds.push([parseFloat(pos[0]), parseFloat(pos[1])]);
-
-		fitBounds(bounds, 0.125);
-	})
+	fitBounds(bounds, 0.125);
 }
 
 function getRect(bounds) {
@@ -160,7 +155,7 @@ var Tracks = {
 			}
 		}
 		this.tracks = [];
-		var traffic = Config.speed;
+		var traffic = android.speed;
 		for (var i in this.points) {
 			var p = this.points[i];
 			var line = L.polyline(p.points, {
@@ -175,8 +170,7 @@ var Tracks = {
 	},
 
 	init: function() {
-		var track_data = Config.track;
-		this.parts = (track_data + "").split('|');
+		this.parts = (android.getTracks() + "").split('|');
 		this.initTracks();
 	},
 
@@ -317,7 +311,7 @@ function showPointInfo(event) {
 	var lon = lon0 + (lon - lon0) * best_pos / 1000;
 	var speed = Math.ceil(speed0 + (speed - speed0) / 1000);
 	var d = new Date(time0 + (time - time0) / 1000);
-	showPopup(lat, lon, d.toLocaleTimeString() + '<br/>' + speed + ' ' + Config.kmh);
+	showPopup(lat, lon, d.toLocaleTimeString() + '<br/>' + speed + ' ' + android.kmh());
 }
 
 function showPopup(lat, lon, text, point) {

@@ -1,7 +1,5 @@
 function showTracks() {
-	getTrack(function() {
-		Tracks.update();
-	});
+	Tracks.update();
 }
 
 function saveTrack() {

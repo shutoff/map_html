@@ -1,7 +1,7 @@
 var Traffic = {
 
 	update: function() {
-		if (Config.traffic) {
+		if (android.traffic()) {
 			if (this.traffic)
 				return;
 			this.traffic = L.tileLayer("http://jn{s}maps.mail.ru/tiles/newjams/{z}/{y}/{x}.png", {
@@ -20,10 +20,6 @@ var Traffic = {
 
 }
 
-function _showTraffic() {
-	Traffic.update();
-}
-
 function showTraffic() {
-	getConfig(_showTraffic);
+	Traffic.update();
 }

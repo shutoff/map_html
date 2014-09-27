@@ -51,7 +51,7 @@ var Points = {
 					if (i == 0) {
 						if (this.icon_active_arrow == null) {
 							this.icon_active_arrow = L.icon({
-								iconUrl: '../img/cur_arrow.png',
+								iconUrl: '../images/cur_arrow.png',
 								iconSize: [24, 24],
 								iconAnchor: [12, 12]
 							});
@@ -60,7 +60,7 @@ var Points = {
 					} else {
 						if (this.icon_arrow == null) {
 							this.icon_arrow = L.icon({
-								iconUrl: '../img/arrow.png',
+								iconUrl: '../images/arrow.png',
 								iconSize: [24, 24],
 								iconAnchor: [12, 12]
 							});
@@ -72,7 +72,7 @@ var Points = {
 					if (i == 0) {
 						if (this.icon_active == null) {
 							this.icon_active = L.icon({
-								iconUrl: '../img/cur_marker.png',
+								iconUrl: '../images/cur_marker.png',
 								iconSize: [24, 24],
 								iconAnchor: [12, 12]
 							});
@@ -81,7 +81,7 @@ var Points = {
 					} else {
 						if (this.icon_inactive == null) {
 							this.icon_inactive = L.icon({
-								iconUrl: '../img/marker.png',
+								iconUrl: '../images/marker.png',
 								iconSize: [24, 24],
 								iconAnchor: [12, 12]
 							});
@@ -156,7 +156,7 @@ var Points = {
 }
 
 function getData() {
-	var points = Config.points.split('|');
+	var points = (android.getData() + "").split('|');
 	Points.data = [];
 	for (var i = 0; i < points.length; i++) {
 		Points.data.push(points[i].split(';'));
@@ -183,7 +183,5 @@ function pointsGetBounds() {
 }
 
 function showPoints() {
-	getPoints(function() {
-		Points.update();
-	})
+	Points.update();
 }

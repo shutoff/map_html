@@ -22,81 +22,6 @@ function loadScript(name, cb) {
     document.body.appendChild(script);
 }
 
-function getFile(name, cb) {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        if ((xmlhttp.readyState == 4) && (xmlhttp.status == 200)) {
-            cb(xmlhttp.responseText);
-        }
-    }
-    xmlhttp.open("GET", "../../" + name, true);
-    xmlhttp.send();
-}
-
-function getConfig(cb) {
-    console.log('getConfig' + getConfig.caller);
-    if (window.android != null) {
-        Config = {};
-        if (android.getType != null)
-            Config.type = android.getType() + '';
-        if (android.traffic != null)
-            Config.traffic = android.traffic() + '';
-        if (android.kmh != null)
-            Config.kmh = android.kmh() + '';
-        if (android.speed != null)
-            Config.speed = android.speed() + '';
-        if (android.language != null)
-            Config.language = android.language() + '';
-        if (android.getZone != null)
-            Config.action = 'zone';
-        if (android.getTracks != null)
-            Config.action = 'track';
-        if (android.getData != null)
-            Config.action = 'point';
-        cb();
-        return;
-    }
-    getFile('config.json', function(res) {
-        Config = JSON.parse(res);
-    })
-}
-
-function getZone(cb) {
-    if (window.android != null) {
-        cb(android.getZone() + "")
-        return;
-
-    }
-    getFile('zone', cb);
-}
-
-function getTrack(cb) {
-    if (window.android != null) {
-        cb(android.getTracks() + "")
-        return;
-
-    }
-    getFile('track', cb);
-}
-
-function getPoints(cb) {
-    if (window.android != null) {
-        cb(android.getPoints() + "")
-        return;
-
-    }
-    getFile('points', cb);
-}
-
-function getLocation(cb) {
-    if (window.android != null) {
-        cb(android.getLocation() + "")
-        return;
-
-    }
-    getFile('location', cb);
-}
-
 var mapLayer;
 
 function loaded() {
@@ -104,42 +29,39 @@ function loaded() {
     map.addLayer(mapLayer);
 }
 
-function loadMapLayer() {
+function updateType() {
     if (mapLayer != null) {
         map.removeLayer(mapLayer);
         mapLayer = null;
     }
-    if (Config.type == 'OSM') {
+    var type = android.getType();
+    if (type == 'OSM') {
         mapLayer = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
             maxZoom: 18
         });
         map.addLayer(mapLayer);
     }
-    if (Config.type == 'Yandex') {
-        loadScript('http://api-maps.yandex.ru/2.0/?load=package.map&lang=' + Config.language, function() {
+    if (type == 'Yandex') {
+        loadScript('http://api-maps.yandex.ru/2.0/?load=package.map&lang=' + android.language(), function() {
             mapLayer = new L.Yandex();
             map.addLayer(mapLayer);
         });
     }
-    if (Config.type == 'Google') {
-        var url = 'https://maps.googleapis.com/maps/api/js?v=3.9&callback=loaded&language=' + Config.language;
+    if (type == 'Google') {
+        var url = 'https://maps.googleapis.com/maps/api/js?v=3.9&callback=loaded&language=' + android.language();
         if (scripts[url] == 1) {
             window.loaded();
             return;
         }
         loadScript(url);
     }
-    if (Config.type == 'Bing') {
+    if (type == 'Bing') {
         mapLayer = new L.BingLayer("Avl_WlFuKVJbmBFOcG3s4A2xUY1DM2LFYbvKTcNfvIhJF7LqbVW-VsIE4IJQB0Nc", {
             type: 'Road',
-            culture: Config.language
+            culture: android.language()
         });
         map.addLayer(mapLayer);
     }
-}
-
-function updateType() {
-    getConfig(loadMapLayer);
 }
 
 function initialize() {
@@ -171,44 +93,37 @@ function initialize() {
     if (zoom > 16)
         zoom = 16;
     map.setZoom(zoom);
-    loadMapLayer();
+    updateType();
 
-    _showTraffic();
-    if (Config.track == null)
+    showTraffic();
+    if (android.getTracks == null)
         myLocation();
 
     notify("init");
 }
 
-function init() {
-    getConfig(function() {
-        console.log(Config.action)
-        if (Config.action == 'zone') {
-            getBounds = zoneGetBounds;
-            initialize();
-            showZone();
-            return;
-        }
-        if (Config.action == 'track') {
-            getBounds = trackGetBounds;
-            initialize();
-            showTracks();
-            return;
-        }
-        if (Config.action == 'points') {
-            getBounds = pointsGetBounds;
-            initialize();
-            showPoints();
-            center();
-            return;
-        }
-    })
+function notify(method, data) {
+    android[method](data);
 }
 
-function notify(method, data) {
-    if (window.android != null) {
-        android[method](data);
+function init() {
+    if (android.getZone != null) {
+        getBounds = zoneGetBounds;
+        initialize();
+        showZone();
         return;
     }
-    console.log(method, data);
+    if (android.getTracks != null) {
+        getBounds = trackGetBounds;
+        initialize();
+        showTracks();
+        return;
+    }
+    if (android.getData != null) {
+        getBounds = pointsGetBounds;
+        initialize();
+        showPoints();
+        center();
+        return;
+    }
 }
