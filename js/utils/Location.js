@@ -155,7 +155,7 @@ var Tracks = {
 			}
 		}
 		this.tracks = [];
-		var traffic = android.speed;
+		var traffic = android.speed();
 		for (var i in this.points) {
 			var p = this.points[i];
 			var line = L.polyline(p.points, {

@@ -1,1 +1,0 @@
-call node ..\node_modules\uglify-js\bin\uglifyjs ..\leaflet-src.js Marker.Rotate.js Leaflet.draw.js Edit.SimpleShape.js Edit.Rectangle.js Location.js Traffic.js Zone.js Points.js Map.js Yandex.js Google.js Bing.js -o ..\leaflet.min.js --screw-ie8 --compress

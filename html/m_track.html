@@ -20,7 +20,7 @@
     <script src="../js/utils/Traffic.js"></script>
     <script src="../js/utils/Zone.js"></script>
     <script src="../js/Map.js"></script>
-    <script src="../android.js"></script>
+    <script src="../android_track.js"></script>
 
     <script type="text/javascript">
 
@@ -33,12 +33,29 @@
         updateType();
     }
 
+    function selectLang(e){
+        var sel = e.target;
+        var lang = sel.options[sel.selectedIndex].value;
+        android.language = function(){
+            return lang;
+        }
+        updateType();
+    }
+
     function setTraffic(e){
         var traffic = e.target.checked;
         android.traffic = function(){
             return traffic;
         }
         showTraffic();
+    }
+
+    function setSpeed(e){
+        var speed = e.target.checked;
+        android.speed = function(){
+            return speed;
+        }
+        showTracks();
     }
 
     </script>
@@ -60,7 +77,12 @@
     <option>Bing</option>
     <option>OSM</option>
 </select>
-<input type="checkbox" onclick="setTraffic(event)">Traffic
+<select onchange="selectLang(event)">
+    <option>ru</option>
+    <option>en</option>
+</select>
+<input type="checkbox" checked onclick="setTraffic(event)">Traffic
+<input type="checkbox" checked onclick="setSpeed(event)">Speed
 <br>
 <div id="map" style="height: 100%"></div>
 </body>
