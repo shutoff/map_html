@@ -6,14 +6,14 @@ function saveTrack() {
 	var bounds = map.getBounds();
 	var ne = bounds.getNorthEast();
 	var sw = bounds.getSouthWest();
-	notify('save', sw.lat + ',' + ne.lat + ',' + sw.lng + ',' + ne.lng);
+	android.save(sw.lat + ',' + ne.lat + ',' + sw.lng + ',' + ne.lng);
 }
 
 function shareTrack() {
 	var bounds = map.getBounds();
 	var ne = bounds.getNorthEast();
 	var sw = bounds.getSouthWest();
-	notify('share', sw.lat + ',' + ne.lat + ',' +  sw.lng + ',' + ne.lng);
+	android.share(sw.lat + ',' + ne.lat + ',' + sw.lng + ',' + ne.lng);
 }
 
 function trackGetBounds() {

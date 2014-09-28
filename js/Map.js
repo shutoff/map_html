@@ -99,11 +99,6 @@ function initialize() {
     if (android.getTracks == null)
         myLocation();
 
-    notify("init");
-}
-
-function notify(method, data) {
-    android[method](data);
 }
 
 function init() {
@@ -111,12 +106,14 @@ function init() {
         getBounds = zoneGetBounds;
         initialize();
         showZone();
+        android.init();
         return;
     }
     if (android.getTracks != null) {
         getBounds = trackGetBounds;
         initialize();
         showTracks();
+        android.init();
         return;
     }
     if (android.getData != null) {
@@ -124,6 +121,7 @@ function init() {
         initialize();
         showPoints();
         center();
+        android.init();
         return;
     }
 }
