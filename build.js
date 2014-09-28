@@ -24,7 +24,7 @@ args.push(path.resolve(__dirname, 'leaflet-src.js'))
 add_files(path.resolve(__dirname, 'js'))
 
 args.push('-o')
-args.push(path.resolve(__dirname, 'leaflet.min.js'))
+args.push(path.resolve(__dirname, '../ugona.net/src/main/assets/leaflet.min.js'))
 args.push('--screw-ie8')
 args.push('--compress')
 

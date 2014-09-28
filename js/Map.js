@@ -34,7 +34,7 @@ function updateType() {
         map.removeLayer(mapLayer);
         mapLayer = null;
     }
-    var type = android.getType();
+    var type = android.getType() + '';
     if (type == 'OSM') {
         mapLayer = L.tileLayer('http://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png', {
             maxZoom: 18
@@ -58,7 +58,7 @@ function updateType() {
     if (type == 'Bing') {
         mapLayer = new L.BingLayer("Avl_WlFuKVJbmBFOcG3s4A2xUY1DM2LFYbvKTcNfvIhJF7LqbVW-VsIE4IJQB0Nc", {
             type: 'Road',
-            culture: android.language()
+            culture: android.language() + ''
         });
         map.addLayer(mapLayer);
     }
