@@ -77,6 +77,17 @@ function setTrack(part) {
     _data = null;
 }
 
+function setZone(part){
+    setPart(part);
+	(function (data) {
+	    android.getZone = function () {
+	        return data;
+	    }
+	    android.setZone = notify('setZone');
+	})(_data);
+    _data = null;
+}
+
 function setTraffic(traffic) {
     android.traffic = function () {
         return traffic;

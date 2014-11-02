@@ -29,7 +29,7 @@ function showZone() {
 
 	rectangle.on('edit', function() {
 		var z = rectangle.getBounds();
-		notify('setZone', z.getNorth() + ',' + z.getWest() + ',' + z.getSouth() + ',' + z.getEast());
+		android.setZone(z.getNorth() + ',' + z.getWest() + ',' + z.getSouth() + ',' + z.getEast());
 	});
 }
 
