@@ -156,16 +156,38 @@ var Tracks = {
 		}
 		this.tracks = [];
 		var traffic = android.speed();
+		var points = [];
 		for (var i in this.points) {
 			var p = this.points[i];
+			p.points.forEach(function(point) {
+				points.push(point)
+			})
 			var line = L.polyline(p.points, {
 					color: traffic ? colors[p.index][1] : '#000080',
-					weight: 7,
+					weight: 9,
 					opacity: 1
 				})
 				.addTo(map);
 			this.tracks.push(line);
 		}
+		var polyline = L.polyline(points, {
+			color: '#000000',
+			weight: 0
+		}).addTo(map);
+		var decorator = L.polylineDecorator(polyline, {
+			patterns: [{
+				offset: 0,
+				repeat: '40px',
+				symbol: new L.Symbol.ArrowHead({
+					pixelSize: 5,
+					pathOptions: {
+						stroke: true,
+						weight: 2,
+						color: '#FFFFFF'
+					}
+				})
+			}]
+		}).addTo(map);
 		map.on('click', showPointInfo)
 	},
 

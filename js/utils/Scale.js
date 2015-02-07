@@ -16,7 +16,7 @@ L.Control.Scale = L.Control.extend({
 		this._label = L.DomUtil.create('div', null, this._container);
 		this._label.style.textAlign = 'right';
 
-		if (!this.options.useCanvas && this.options.useCanvas != false)
+		if (this.options.useCanvas == null)
 			this.options.useCanvas = "HTMLCanvasElement" in window;
 		if (this.options.useCanvas) {
 			this._canvas = L.DomUtil.create('canvas', 'leaflet-canvas-marker', this._container);
