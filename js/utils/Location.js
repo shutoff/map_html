@@ -164,7 +164,7 @@ var Tracks = {
 			})
 			var line = L.polyline(p.points, {
 					color: traffic ? colors[p.index][1] : '#000080',
-					weight: 9,
+					weight: 12,
 					opacity: 1
 				})
 				.addTo(map);
@@ -177,9 +177,9 @@ var Tracks = {
 		var decorator = L.polylineDecorator(polyline, {
 			patterns: [{
 				offset: 0,
-				repeat: '40px',
+				repeat: '50px',
 				symbol: new L.Symbol.ArrowHead({
-					pixelSize: 5,
+					pixelSize: 8,
 					pathOptions: {
 						stroke: true,
 						weight: 2,
