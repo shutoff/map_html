@@ -14,17 +14,18 @@ var Points = {
 		}
 		for (var i = 0; i < this.data.length; i++) {
 			var p = this.data[i];
+			console.log(p)
 			var lat = parseFloat(p[0]);
 			var lng = parseFloat(p[1]);
 			var icon;
 			var course = 0;
-			if (p[4]) {
+			if (p[5]) {
 				if (this.markers[i] != null) {
 					map.removeLayer(this.markers[i]);
 					this.markers[i] = null;
 				}
 				var path = [];
-				var points = p[4].split('_');
+				var points = p[5].split('_');
 				for (var n = 0; n < points.length; n++) {
 					var point = points[n].split(',');
 					path.push(new L.LatLng(point[0], point[1]));
@@ -168,8 +169,8 @@ function pointsGetBounds() {
 	var bounds = [
 		[parseFloat(Points.data[0][0]), parseFloat(Points.data[0][1])]
 	];
-	if (Points.data[0][4]) {
-		var points = Points.data[0][4].split('_');
+	if (Points.data[0][5]) {
+		var points = Points.data[0][5].split('_');
 		var min_lat = 180;
 		var max_lat = -180;
 		var min_lon = 180;

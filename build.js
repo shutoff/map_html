@@ -30,7 +30,7 @@ args.push('--compress')
 
 console.log(args)
 
-child_process.fork(path.resolve(__dirname, 'node_modules/uglify-js/bin/uglifyjs'), args)
+child_process.fork(path.resolve(__dirname, 'node_modules/uglifyjs/bin/uglifyjs'), args)
 	.on('exit', function(code){
 		console.log('done', code)
 		process.exit()
